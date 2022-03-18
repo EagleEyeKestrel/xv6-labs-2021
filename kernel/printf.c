@@ -136,11 +136,14 @@ printfinit(void)
 void
 backtrace(void) {
   printf("backtrace:\n");
-  uint64 fp = r_fp();
-  printf("fp: %p\n", fp);
-  uint64 *p = (uint64*) fp;
-  p--;
-  printf("return addr: %p\n", *p);
-  p--;
-  printf("prev fp: %p\n", *p);
+  uint64 now = r_fp();
+  uint64 upper = PGROUNDUP(now);
+  uint64 lower = PGROUNDDOWN(now);
+  while (now > lower && now < upper) {
+    uint64 *prev_fp = (uint64*)now, *return_addr = (uint64*)now;
+    return_addr -= 1;
+    prev_fp -= 2;
+    printf("%p\n", *return_addr);
+    now = *prev_fp;
+  }
 }
