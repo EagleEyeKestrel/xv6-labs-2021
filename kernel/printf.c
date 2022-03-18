@@ -139,8 +139,8 @@ backtrace(void) {
   uint64 fp = r_fp();
   printf("fp: %p\n", fp);
   uint64 *p = (uint64*) fp;
-  p -= 8;
+  p--;
   printf("return addr: %p\n", *p);
-  p -= 8;
+  p--;
   printf("prev fp: %p\n", *p);
 }
