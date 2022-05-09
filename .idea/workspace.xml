@@ -13,11 +13,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c1d6e17b-330a-48d2-a212-145e6cf13633" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/bio.c" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/bio.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kernel/buf.h" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/buf.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kernel/kalloc.c" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/kalloc.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/param.h" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/param.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -73,7 +70,8 @@
       <workItem from="1649656773663" duration="5342000" />
       <workItem from="1649738132577" duration="17000" />
       <workItem from="1651579855756" duration="566000" />
-      <workItem from="1651648141233" duration="23831000" />
+      <workItem from="1651648141233" duration="24439000" />
+      <workItem from="1652071277643" duration="7166000" />
     </task>
     <servers />
   </component>

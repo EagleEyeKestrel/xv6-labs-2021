@@ -22,7 +22,6 @@
 #include "defs.h"
 #include "fs.h"
 #include "buf.h"
-#include <stddef.h>
 
 struct bucket {
     struct spinlock lock;
@@ -31,7 +30,6 @@ struct bucket {
 
 struct {
   struct spinlock lock;
-  struct spinlock locks[NBUCKET];
   struct buf buf[NBUF];
 
   // Linked list of all buffers, through prev/next.
@@ -110,7 +108,7 @@ bget(uint dev, uint blockno)
 //    }
 //  }
     uint mint = ~0;
-    struct buf *res = NULL;
+    struct buf *res = 0;
     for (b = bhash[key].buffer; b < bhash[key].buffer + BUCKETSZ; b++) {
         if (b->last < mint && b->refcnt == 0) {
             mint = b->last;
