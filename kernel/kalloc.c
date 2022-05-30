@@ -47,7 +47,7 @@ void
 kfree(void *pa)
 {
   struct run *r;
-
+    //printf("kfree: %p %p %p\n", pa, end, PHYSTOP);
   if(((uint64)pa % PGSIZE) != 0 || (char*)pa < end || (uint64)pa >= PHYSTOP)
     panic("kfree");
 

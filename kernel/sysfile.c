@@ -484,3 +484,78 @@ sys_pipe(void)
   }
   return 0;
 }
+
+uint64
+sys_mmap(void)
+{
+    struct file *f;
+    uint64 addr, length;
+    int flags, prot, offset;
+    if (argaddr(0, &addr) < 0 || argaddr(1, &length) < 0 || argint(2, &prot) < 0
+        || argint(3, &flags) < 0 || argfd(4, 0, &f) < 0 || argint(5, &offset) < 0)
+        return -1;
+
+    if (flags == MAP_SHARED && (prot & PROT_WRITE) && !f->writable)
+        return -1;
+
+    struct proc *p = myproc();
+    addr = p->sz;
+    p->sz += length;
+    int pos = -1;
+    for (int i = 0; i < VMASIZE; i++) {
+        if (!p->vmas[i].valid) {
+            pos = i;
+            break;
+        }
+    }
+    if (pos == -1)
+        return -1;
+    filedup(f);
+    p->vmas[pos].f = f;
+    p->vmas[pos].addr = addr;
+    p->vmas[pos].length = length;
+    p->vmas[pos].offset = offset;
+    p->vmas[pos].flag = flags;
+    p->vmas[pos].prot = prot;
+    p->vmas[pos].valid = 1;
+    //printf("mmap %p %p\n", addr, length);
+    return addr;
+}
+
+uint64
+sys_munmap(void)
+{
+    uint64 addr, length;
+    if (argaddr(0, &addr) < 0 || argaddr(1, &length) < 0)
+        return -1;
+    //printf("unmap %p %p\n", addr, length);
+    struct proc *p = myproc();
+    int pos = -1;
+    for (int i = 0; i < VMASIZE; i++) {
+//        if(p->vmas[i].valid) {
+//            printf("unmap vma item: %p %p\n", p->vmas[i].addr, p->vmas[i].length);
+//        }
+        if (p->vmas[i].valid && addr >= p->vmas[i].addr && addr < p->vmas[i].addr + p->vmas[i].length) {
+            pos = i;
+            break;
+        }
+    }
+    //printf("unmap vma pos: %d\n", pos);
+    if (pos == -1)
+        return -1;
+    int page_num = length / PGSIZE;
+    if (p->vmas[pos].flag & MAP_SHARED) {
+        filewrite(p->vmas[pos].f, addr, length);
+    }
+    //printf("uvmunmap in sys_munmap:%p %p\n", addr, page_num);
+    uvmunmap(p->pagetable, addr, page_num, 1);
+    if (addr == p->vmas[pos].addr) {
+        p->vmas[pos].addr += length;
+    }
+    p->vmas[pos].length -= length;
+    if (p->vmas[pos].length == 0) {
+        fileclose(p->vmas[pos].f);
+        p->vmas[pos].valid = 0;
+    }
+    return 0;
+}
